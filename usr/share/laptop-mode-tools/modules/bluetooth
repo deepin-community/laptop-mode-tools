@@ -1,0 +1,49 @@
+#! /bin/sh
+#
+# Laptop mode tools module: bluetooth
+#
+
+if [ x$CONTROL_BLUETOOTH = x1 ] ; then
+
+	ENABLE_BLUETOOTH=$BATT_ENABLE_BLUETOOTH
+	if [ $ON_AC -eq 1 ] ; then
+		ENABLE_BLUETOOTH=$AC_ENABLE_BLUETOOTH
+	fi
+
+        RFKILL=`which rfkill`;
+
+	if [ x$ENABLE_BLUETOOTH = x1 ] ; then
+		log "VERBOSE" "Enabling bluetooth."
+
+                if [ -x $RFKILL ]; then
+                    log "VERBOSE" "Soft un-blocking bluetooth using rfkill interface"
+                    $RFKILL unblock bluetooth
+		elif [ -f /proc/acpi/ibm/bluetooth ]; then
+		    # For thinkpads, where the thinkpad_acpi driver is loaded,
+		    # we can handle bluetooth easily
+		    log "VERBOSE" "Enabling ThinkPad Bluetooth device"
+		    echo "enable" > /proc/acpi/ibm/bluetooth
+                else
+		    for INTF in $BLUETOOTH_INTERFACES ; do
+			[ -d /sys/class/bluetooth/$INTF ] || continue
+			log "VERBOSE" "`hciconfig $INTF up 2>&1`"
+		    done
+                fi
+	else
+		log "VERBOSE" "Disabling bluetooth."
+
+                if [ -x $RFKILL ]; then
+                    log "VERBOSE" "Soft blocking bluetooth using rfkill interface"
+                    $RFKILL block bluetooth
+		elif [ -f /proc/acpi/ibm/bluetooth ]; then
+			log "VERBOSE" "Disabling ThinkPad Bluetooth device"
+			echo "disable" > /proc/acpi/ibm/bluetooth
+                else
+		    for INTF in $BLUETOOTH_INTERFACES ; do
+			[ -d /sys/class/bluetooth/$INTF ] || continue
+			log "VERBOSE" "`hciconfig $INTF down 2>&1`"
+		    done
+                fi
+	fi
+fi
+

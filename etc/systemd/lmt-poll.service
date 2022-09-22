@@ -1,0 +1,17 @@
+[Unit]
+Description=Laptop Mode Tools - Battery Polling Service
+Documentation=man:laptop_mode(8) man:laptop-mode.conf(8)
+Documentation=http://github.com/rickysarraf/laptop-mode-tools
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+Environment=CONTROL_BATTERY_LEVEL_POLLING=1
+EnvironmentFile=-/etc/laptop-mode/conf.d/battery-level-polling.conf
+ExecStart=-/bin/sh -c '[ x"$CONTROL_BATTERY_LEVEL_POLLING" = "x1" ] && /lib/udev/lmt-udev auto || echo "laptop-mode: Battery polling disabled"'
+ExecReload=-/bin/sh -c '[ x"$CONTROL_BATTERY_LEVEL_POLLING" = "x1" ] && /lib/udev/lmt-udev auto || echo "laptop-mode: Battery polling disabled"'
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

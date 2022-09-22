@@ -1,0 +1,41 @@
+laptop-mode-tools (1.71-2) unstable; urgency=medium
+
+  Starting with the 1.68 release, there are some new files:
+  laptop-mode.service, laptop-mode.timer and lmt-poll.service.
+  lmt-poll.service is the equivalent of the module battery-level-polling
+  .
+  To enable battery level polling on a systemd init based machine,
+  please enable lmt-poll.service and laptop-mode.timer service files
+  .
+  On new installations and existing upgrades, these services are
+  enabled by default. These new service/timer files currently do not
+  honor the CONTROL_BATTERY_LEVEL_POLLING setting
+
+ -- Ritesh Raj Sarraf <rrs@debian.org>  Fri, 19 Jan 2018 11:17:11 +0530
+
+laptop-mode-tools (1.66-2) unstable; urgency=medium
+
+  Starting with version 1.65, Laptop Mode Tools has dropped support for
+  the usb-autosuspend module. The module and its functionality is now
+  provided through the runtime-pm module
+  .
+  Users are advised to migrate their settings to the new module
+
+ -- Ritesh Raj Sarraf <rrs@debian.org>  Sun, 19 Oct 2014 20:11:47 +0530
+
+laptop-mode-tools (1.64-1) unstable; urgency=low
+
+  With this version, Laptop Mode Tools introduces a basic graphical
+  configuration tool to enable/disable different modules. The GUI is
+  written in Python/QT4, thus those packages have been added to the
+  Recommends section. If you do not intend to use the graphical 
+  utility, you can choose to not install the Python QT4 recommends
+  .
+  This release will also touch all the configuration files. In case
+  you have heavily modified configuration files, you may want to
+  verify your configuration after the installation is complete
+  .
+  This could also be the right time to migrate your custom settings 
+  to the /etc/laptop-mode/conf.d/board-specific/ folder
+
+ -- Ritesh Raj Sarraf <rrs@debian.org>  Sun, 15 Sep 2013 21:48:20 +0530

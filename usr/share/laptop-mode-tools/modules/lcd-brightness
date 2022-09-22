@@ -1,0 +1,28 @@
+#! /bin/sh
+#
+# Laptop mode tools module: control LCD brightness
+#
+
+# Control LCD brightness
+if [ x$CONTROL_BRIGHTNESS = x1 ] ; then
+	if [ $ON_AC -eq 1 ]; then
+		if [ "$ACTIVATE" -eq 1 ]; then
+			BRIGHTNESS_COMMAND="$LM_AC_BRIGHTNESS_COMMAND"
+		else
+			BRIGHTNESS_COMMAND="$NOLM_AC_BRIGHTNESS_COMMAND"
+		fi
+	else
+		BRIGHTNESS_COMMAND="$BATT_BRIGHTNESS_COMMAND"
+	fi
+
+	log "VERBOSE" "Set LCD brightness using command $BRIGHTNESS_COMMAND \> $BRIGHTNESS_OUTPUT."
+	$BRIGHTNESS_COMMAND > $BRIGHTNESS_OUTPUT;
+	if [ $? -eq 0 ]; then
+		log "MSG" "LCD Brightness Command succeeded."
+	else
+		log "ERR" "The configured LCD brightness command of the lcd-brightness module failed."
+		log "ERR" "Please check your configuration in /etc/laptop-mode/conf.d/lcd-brightness.conf."
+		log "ERR" "Command failed."
+	fi
+fi
+
